@@ -1,0 +1,25 @@
+version: '2'
+services:
+  webserver:
+    build: ./docker/conf
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/conf/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./docker/conf/php.ini:/usr/local/etc/php/php.ini
+      - ./log/s:/var/log/
+    volumes_from:
+      - app
+
+  composer:
+      image: composer/composer
+      volumes_from:
+        - webserver
+      working_dir: /var/www/html
+
+  # FS volumes_from
+  app:
+    image: tianon/true
+    volumes:
+      - ./:/var/www/html
+
